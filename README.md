@@ -4,4 +4,5 @@ A new Flutter project.
 
 ## Getting Started
 
-add supabase_flutter: ^1.4.2 to your yaml file
+add the dependancies below to your yaml file
+  supabase_flutter: ^1.4.2 
