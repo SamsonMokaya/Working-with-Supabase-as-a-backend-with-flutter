@@ -63,17 +63,21 @@ class _HomePageState extends State<HomePage> {
 
   void _storeData() async{
 
+    Navigator.pop(context);
+
     final newCountry = {
       'name':_countryController.text
     };
 
     final response = await supabase.from('countries').insert(newCountry).execute();
 
+    _countryController.clear();
+
     getData();
 
   }
 
-  void _openReminderForm(BuildContext context) {
+  void _openCountryForm(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -90,12 +94,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
+                      return 'Please enter a country';
                     }
                     return null;
                   },
                 ),
-                myButton(onTap: _storeData, text: "Save Reminder")
+                myButton(onTap: _storeData, text: "Save Country")
               ],
             ),
           ),
@@ -107,24 +111,29 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: countries.length,
-                itemBuilder: ((context, index){
-                  final country = countries[index];
-                   return ListTile(
-                     title: Text(country['name'])
-                   );
-                })
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: countries.length,
+                  itemBuilder: ((context, index){
+                    final country = countries[index];
+                    return ListTile(
+                      title: country != null
+                          ? Text(country['name'])
+                          : Text("Add a country"),
+                    );
+
+                  })
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _openReminderForm(context),
+        onPressed: () => _openCountryForm(context),
         child: Icon(Icons.add),
         backgroundColor: Colors.deepPurpleAccent,
       ),
